@@ -19,8 +19,8 @@ public class BoardController {
     BoardRepository boardRepository;
 
     //게시글 조회
-    @GetMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Board> getList(@RequestParam(required = false) Long postid ){
+    @GetMapping(value = "/list/{postid}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Board> getList(@PathVariable(required = false) Long postid ){
         if (postid != null){
             return boardRepository.findByPostid(postid);
         }
