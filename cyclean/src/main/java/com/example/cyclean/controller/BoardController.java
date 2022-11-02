@@ -29,8 +29,14 @@ public class BoardController {
 
     //게시글 작성
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void register(Model model, @RequestBody Board board){
-
+    public int register(@RequestBody Board board){
+        try{
+            boardRepository.save(board);
+        }
+        catch (Exception e){
+            return 0;
+        }
+        return 1;
     }
 
 
