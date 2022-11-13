@@ -1,14 +1,23 @@
 package com.example.cyclean.vo;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString(exclude = "replys")
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
 public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,5 +30,20 @@ public class Board {
     private LocalDateTime regdate;
     @UpdateTimestamp
     private LocalDateTime updatedate;
+
+    @OneToMany(mappedBy = "board",fetch = FetchType.LAZY)
+    private List<Reply> replys;
+
+    public void addList(Reply reply){
+        if(this.replys==null){
+            this.replys=new ArrayList<>();
+        }
+        this.replys.add(reply);
+        reply.setBoard(this);
+    }
+
+
+
+
 
 }
