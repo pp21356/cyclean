@@ -23,7 +23,8 @@ public class ReplyController {
     //댓글등록
     @PostMapping("/register/{postid}")
     public void replyRegist(@PathVariable Long postid, @RequestBody Reply reply){
-        Board board = boardRepository.findByPostid(postid);
+        Board board = boardRepository.findByPostid(postid).orElseThrow(() ->
+                new IllegalArgumentException("게시글이 존재하지 않습니다."));;
         board.addList(reply);
         reply.setBoard(board);
         replyRepository.save(reply);
@@ -33,7 +34,8 @@ public class ReplyController {
     //댓글삭제
     @PostMapping("delete/{postid}/{replyno}/{userid}")
     public void deleteReply(@PathVariable Long postid, @PathVariable int replyno, @PathVariable String userid){
-        Board board = boardRepository.findByPostid(postid);
+        Board board = boardRepository.findByPostid(postid).orElseThrow(() ->
+                new IllegalArgumentException("게시글이 존재하지 않습니다."));;
         List<Reply> replys = board.getReplys();
         int number= replyno-1;
         Reply deletereply = replys.get(number);

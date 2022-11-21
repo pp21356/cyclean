@@ -26,7 +26,8 @@ public class BoardController {
     //게시글 한 개 조회
     @GetMapping(value ="/list/{postid}")
     public Board getone(@PathVariable Long postid){
-        return boardRepository.findByPostid(postid);
+        return boardRepository.findByPostid(postid) .orElseThrow(() ->
+                new IllegalArgumentException("게시글이 존재하지 않습니다."));
     }
 
     //게시글 작성
@@ -44,7 +45,8 @@ public class BoardController {
     //게시글 수정
     @PostMapping(value ="/modify/{postid}/{userid}")
     public int modify(@PathVariable Long postid, @PathVariable String userid, @RequestBody Board board){
-            Board updateBoard = boardRepository.findByPostid(postid);
+            Board updateBoard = boardRepository.findByPostid(postid).orElseThrow(() ->
+                    new IllegalArgumentException("게시글이 존재하지 않습니다."));;
             String checkUser = updateBoard.getUserid().toString();
             if(checkUser.equals(updateBoard.getUserid())){
                 updateBoard.setTitle(board.getTitle());
@@ -65,7 +67,8 @@ public class BoardController {
     //게시글 삭제
     @PostMapping(value="/delete/{postid}/{userid}")
     public int delete(@PathVariable Long postid, @PathVariable String userid){
-        Board checkbd = boardRepository.findByPostid(postid);
+        Board checkbd = boardRepository.findByPostid(postid).orElseThrow(() ->
+                new IllegalArgumentException("게시글이 존재하지 않습니다."));;
         String checkUser = checkbd.getUserid().toString();
         log.info("checkUser: " + checkUser);
         log.info("userid: " + userid);
@@ -74,6 +77,7 @@ public class BoardController {
             return 1;
         }
         else {
+            new IllegalArgumentException("글쓴이가 일치하지 않습니다.");
             return 0;
         }
     }
